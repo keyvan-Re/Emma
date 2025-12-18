@@ -189,13 +189,13 @@ class LocalMemoryRetrieval:
                  language='cn'
                  ):
         self.language = language
-        self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model_dict[embedding_model],
-                                                model_kwargs={'device': embedding_device})
+        self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model_dict[embedding_model]
+                                                )
         self.top_k = top_k
     
     def init_memory_vector_store(self,
-                                    filepath: str or List[str],
-                                    vs_path: str or os.PathLike = None,
+                                    filepath: str or List[str], # type: ignore
+                                    vs_path: str or os.PathLike = None, # type: ignore
                                     user_name: str = None,
                                     cur_date: str = None):
         loaded_files = []
@@ -275,7 +275,7 @@ class LocalMemoryRetrieval:
         date_docs = []
         dates = []
         for doc in related_docs:
-            doc.page_content = doc.page_content.replace(f'时间{doc.metadata["source"]}的对话内容：','').strip()
+            doc.page_content = doc.page_content.replace(f'time{doc.metadata["source"]}The conversation content:','').strip()
             if doc.metadata["source"] != pre_date:
                 # date_docs.append(f'在时间{doc.metadata["source"]}的回忆内容是：{doc.page_content}')
                 date_docs.append(doc.page_content)

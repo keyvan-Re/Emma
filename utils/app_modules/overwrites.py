@@ -1,7 +1,9 @@
 from __future__ import annotations
 import logging
 
-from llama_index import Prompt
+#from llama_index import Prompt
+from llama_index.core import PromptTemplate  # or Prompt if you still need the legacy name
+
 from typing import List, Tuple
 import mdtex2html, os, sys
 path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../')
@@ -10,7 +12,7 @@ from utils.app_modules.presets import *
 from utils.app_modules.utils import *
 
 
-def compact_text_chunks(self, prompt: Prompt, text_chunks: List[str]) -> List[str]:
+def compact_text_chunks(self, prompt: PromptTemplate, text_chunks: List[str]) -> List[str]:
     logging.debug("Compacting text chunks...🚀🚀🚀")
     combined_str = [c.strip() for c in text_chunks if c.strip()]
     combined_str = [f"[{index+1}] {c}" for index, c in enumerate(combined_str)]

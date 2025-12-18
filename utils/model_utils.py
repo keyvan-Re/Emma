@@ -16,16 +16,24 @@ prefix_projection = False
 
 def load_chatglm_tokenizer_and_model(model_path):
     tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-    model = AutoModel.from_pretrained(model_path, trust_remote_code=True).half().cuda()
+    
+    #model = AutoModel.from_pretrained(model_path, trust_remote_code=True).half().cuda()
+    #model = AutoModel.from_pretrained(model_path, trust_remote_code=True).half(4).cuda()
+    model = AutoModel.from_pretrained(model_path, trust_remote_code=True).half().quantize(4).cuda()
+
     model = model.eval()
     return tokenizer, model
 
 def load_lora_chatglm_tokenizer_and_model(model_path,adapter_model):
     tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-    model = AutoModel.from_pretrained(model_path, trust_remote_code=True)
+    
+    #model = AutoModel.from_pretrained(model_path, trust_remote_code=True)
+    #model = AutoModel.from_pretrained(model_path, trust_remote_code=True).half(4).cuda()
+    model = AutoModel.from_pretrained(model_path, trust_remote_code=True).half().quantize(4).cuda()
+
     model = PeftModel.from_pretrained(model, adapter_model)
     torch.set_default_tensor_type(torch.cuda.FloatTensor)
-    model = model.half().cuda().eval()
+    #model = model.half().cuda().eval()
     return tokenizer, model
 
 def load_prefix_chatglm_tokenizer_and_model(model_path,ptuning_checkpoint):

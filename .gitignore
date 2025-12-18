@@ -1,0 +1,19 @@
+
+Classification Model/
+
+
+__pycache__/
+*.pyc
+
+
+venv/
+env/
+.venv/
+myenv/
+unstructured_env/
+
+
+.vscode/
+
+
+.ipynb_checkpoints

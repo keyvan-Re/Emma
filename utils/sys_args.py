@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 @dataclass
 class DataArguments:
     memory_search_top_k: int = field(default=2)
-    memory_basic_dir: str = field(default='../../memories/')
+    memory_basic_dir: str = field(default='MMPL_gpt/memories')
     memory_file: str = field(default='update_memory_0512_eng.json')
     language: str = field(default='en')
     max_history: int = field(default=7,metadata={"help": "maximum number for keeping current history"},)
@@ -19,7 +19,7 @@ class ModelArguments:
         metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"},
     )
     adapter_model: str = field(
-        default=None,
+        default="MMPL_gpt\ChatGLM-LoRA-checkpoint",
         metadata={"help": "Path to lora adapter model"},
     )
     ptuning_checkpoint: str = field(
@@ -34,3 +34,8 @@ class ModelArguments:
 data_args,model_args = HfArgumentParser(
     (DataArguments,ModelArguments)
 ).parse_args_into_dataclasses()
+"""
+data_args, model_args, _ = HfArgumentParser(
+    (DataArguments, ModelArguments)
+).parse_args_into_dataclasses(return_remaining_strings=True)
+"""
