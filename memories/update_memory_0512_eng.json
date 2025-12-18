@@ -5813,6 +5813,10 @@
                     {
                         "query": "Hi",
                         "response": "Hi again, Ali! 😊 I’m here for you. What’s on your mind?"
+                    },
+                    {
+                        "query": "Hello",
+                        "response": "Hey there, Ali! 😊 How are you feeling today?"
                     }
                 ]
             }
@@ -5841,6 +5845,62 @@
             }
         ],
         "episodic_memory": [],
+        "semantic_memory": {}
+    },
+    "Keyvan65": {
+        "name": "Keyvan65",
+        "profile": {
+            "age": "",
+            "gender": "Male",
+            "occupation": "",
+            "residence": ""
+        },
+        "sessions": [
+            {
+                "session_id": 0,
+                "date": "2025-12-18",
+                "conversation": [
+                    {
+                        "query": "Hello , how are today?",
+                        "response": "Hello, Keyvan65! 😊 I'm doing great, thank you for asking—especially now that you're here to chat with me! How about you? How's your day been so far? 💬"
+                    }
+                ]
+            }
+        ],
+        "episodic_memory": [],
+        "semantic_memory": {}
+    },
+    "keyvan66": {
+        "name": "keyvan66",
+        "profile": {
+            "age": "",
+            "gender": "Male",
+            "occupation": "",
+            "residence": ""
+        },
+        "sessions": [
+            {
+                "session_id": 0,
+                "date": "2025-12-18",
+                "conversation": [
+                    {
+                        "query": "Hello",
+                        "response": "Hi there, Keyvan! 😊 How are you feeling today? I'm here to listen and brighten your day. What's on your mind? 🌟"
+                    }
+                ]
+            }
+        ],
+        "episodic_memory": [
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-18",
+                "session_id": 0
+            }
+        ],
         "semantic_memory": {}
     }
 }
