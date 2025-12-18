@@ -1,85 +1,104 @@
 # -*- coding: utf-8 -*-
-import sys 
-sys.path.append('../memory_bank')
-# from azure_client import LLMClientSimple
-import openai, json, os
-import argparse
-import copy
+import sys
+import os
 import json
 import time
+import copy
+import argparse
 from typing import Dict, Any
-memory_dir = os.path.expanduser("C:\\Users\\keyva\\MMPL_gpt\\memories\\update_memory_0512_eng.json")
+
+import openai
+
+# Add memory bank path
+sys.path.append('../memory_bank')
+
+# Configuration for OpenAI API
+CHATGPT_CONFIG = {
+    "model": "gpt-4o",
+    "temperature": 0.7,
+    "max_tokens": 400,
+    "top_p": 1.0,
+    "frequency_penalty": 0.4,
+    "presence_penalty": 0.2,
+    "stop": ["<|im_end|>", "¬Human"]
+}
+
+# Default memory directory
+MEMORY_DIR = os.path.expanduser("C:\\Users\\keyva\\MMPL_gpt\\memories\\update_memory_0512_eng.json")
+
+
 class LLMClientSimple:
-
-    def __init__(self,gen_config=None):
-        
+    def __init__(self, gen_config=None):
         openai.api_key = os.getenv("OPENAI_API_KEY")
-        
         self.disable_tqdm = False
-        self.gen_config = gen_config 
+        self.gen_config = gen_config
 
-    def generate_text_simple(self,prompt,prompt_num,language='en'):
+    def generate_text_simple(self, prompt, prompt_num, language='en'):
         self.gen_config['n'] = prompt_num
-        retry_times,count = 5,0
+        retry_times, count = 5, 0
         response = None
-        while response is None and count<retry_times:
+        
+        while response is None and count < retry_times:
             try:
                 request = copy.deepcopy(self.gen_config)
                 # print(prompt)
-                if language=='cn':
+                
+                # System prompt setup based on language
+                if language == 'cn':
                     message = [
-                    {"role": "system", "content": "The following is a transcript of a conversation between a human and a smart, psychology-savvy AI assistant."},
-                    {"role": "user", "content": "Hello! Please help me summarize the conversation"},
-                    {"role": "system", "content": "OK, I'll try to help you."},
-                    {"role": "user", "content": f"{prompt}"}]
+                        {"role": "system", "content": "The following is a transcript of a conversation between a human and a smart, psychology-savvy AI assistant."},
+                        {"role": "user", "content": "Hello! Please help me summarize the conversation"},
+                        {"role": "system", "content": "OK, I'll try to help you."},
+                        {"role": "user", "content": f"{prompt}"}
+                    ]
                 else:
                     message = [
-                    {"role": "system", "content": "Below is a transcript of a conversation between a human and an AI assistant that is intelligent and knowledgeable in psychology."},
-                    {"role": "user", "content": "Hello! Please help me summarize the content of the conversation."},
-                    {"role": "system", "content": "Sure, I will do my best to assist you."},
-                    {"role": "user", "content": f"{prompt}"}]
-                response = openai.ChatCompletion.create(
-                    **request, messages=message)
+                        {"role": "system", "content": "Below is a transcript of a conversation between a human and an AI assistant that is intelligent and knowledgeable in psychology."},
+                        {"role": "user", "content": "Hello! Please help me summarize the content of the conversation."},
+                        {"role": "system", "content": "Sure, I will do my best to assist you."},
+                        {"role": "user", "content": f"{prompt}"}
+                    ]
+
+                response = openai.ChatCompletion.create(**request, messages=message)
                 # print(prompt)
+
             except Exception as e:
                 print(e)
                 if 'This model\'s maximum context' in str(e):
-                        cut_length = 1800-200*(count)
-                        print('max context length reached, cut to {}'.format(cut_length))
-                        prompt = prompt[-cut_length:]
-                        response=None
-                count+=1
+                    cut_length = 1800 - 200 * count
+                    print('max context length reached, cut to {}'.format(cut_length))
+                    prompt = prompt[-cut_length:]
+                    response = None
+                count += 1
+        
         if response:
-            task_desc = response['choices'][0]['message']['content'] #[response['choices'][i]['text'] for i in range(len(response['choices']))]
+            task_desc = response['choices'][0]['message']['content']
         else:
             task_desc = ''
         return task_desc
+
+
+# Initialize the client
+llm_client = LLMClientSimple(CHATGPT_CONFIG)
+
+
+# --- Prompt Generation Functions ---
+
+def summarize_content_prompt(content, user_name, boot_name, language='en'):
+    # Base prompt adjusted based on psychology
+    prompt = 'Please summarize the following dialogue from a psychological perspective, focusing on the user\'s emotional state, key concerns, and potential therapeutic insights. Dialogue content:\n'
     
-
-chatgpt_config = {"model": "gpt-4o",
-        "temperature": 0.7,
-        "max_tokens": 400,
-        "top_p": 1.0,
-        "frequency_penalty": 0.4,
-        "presence_penalty": 0.2, 
-        "stop": ["<|im_end|>", "¬Human"]
-        }
-
-llm_client = LLMClientSimple(chatgpt_config)
-
-def summarize_content_prompt(content,user_name,boot_name,language='en'):
-    #prompt = 'Please summarize the following conversation as briefly as possible, extracting the main theme and key information of the conversation. If there are multiple key events, you can summarize them in points. Conversation content:\n' if language=='cn' else 'Please summarize the following dialogue as concisely as possible, extracting the main themes and key information. If there are multiple key events, you may summarize them separately. Dialogue content:\n'
-    prompt =  'Please summarize the following dialogue from a psychological perspective, focusing on the user\'s emotional state, key concerns, and potential therapeutic insights. Dialogue content:\n' #new prompt adjust base on psychology
     for dialog in content:
         query = dialog['query']
         response = dialog['response']
-        
-        prompt += f"\n{user_name}：{query.strip()}"
-        prompt += f"\n{boot_name}：{response.strip()}"
-    prompt += ('\nSummary:' if language=='cn' else '\nSummarization：')
+        prompt += f"\n{user_name}: {query.strip()}"
+        prompt += f"\n{boot_name}: {response.strip()}"
+    
+    prompt += ('\nSummary:' if language == 'cn' else '\nSummarization:')
     return prompt
-#////////////////////////////////////////////////////////////////////////////////////
-def summarize_user_issues_prompt(content, user_name, boot_name,language='en'):
+
+
+def summarize_user_issues_prompt(content, user_name, boot_name, language='en'):
     """
     Analyze the conversation from a psychological perspective, identify user problems and their causes,
     and organize them into a structured JSON format.
@@ -93,52 +112,50 @@ def summarize_user_issues_prompt(content, user_name, boot_name,language='en'):
     for dialog in content:
         query = dialog['query']
         response = dialog['response']
-
         prompt += f"\n{user_name}: {query.strip()}"
         prompt += f"\n{boot_name}: {response.strip()}"
 
     prompt += '\n\nPlease list the user’s problems and their causes in JSON format, like this:\n'
     prompt += '{\n  "problems": [\n    {\n      "problem": "<problem_1>",\n      "cause": "<cause_1>"\n    },\n    {\n      "problem": "<problem_2>",\n      "cause": "<cause_2>"\n    }\n  ]\n}'
 
-    # Assuming some function like `generate_summary_response()` sends this prompt to the LLM
-    #response = generate_summary_response(prompt)
-
-    #try:
-     #   structured_summary = json.loads(response)
-    #except json.JSONDecodeError:
-        #structured_summary = {"problems": []}
-
     return prompt
-#///////////////////////////////////////////////////////////////////////////////////////////////////////
-def summarize_overall_prompt(content,language='en'):
-    prompt = 'Please summarize the following events in a high-level manner, and try to be as concise as possible, summarizing and retaining the core key information:\n' if language=='cn' else "Please provide a highly concise summary of the following event, capturing the essential key information as succinctly as possible. Summarize the event:\n"
-    for date,summary_dict in content:
+
+
+def summarize_overall_prompt(content, language='en'):
+    prompt = 'Please summarize the following events in a high-level manner, and try to be as concise as possible, summarizing and retaining the core key information:\n' if language == 'cn' else "Please provide a highly concise summary of the following event, capturing the essential key information as succinctly as possible. Summarize the event:\n"
+    
+    for date, summary_dict in content:
         summary = summary_dict['content']
-        prompt += (f"\nTime{date}The event that occurred was{summary.strip()}" if language=='cn' else f"At {date}, the events are {summary.strip()}")
-    prompt += ('\nSummary:' if language=='cn' else '\nSummarization：')
+        prompt += (f"\nTime {date} The event that occurred was {summary.strip()}" if language == 'cn' else f"At {date}, the events are {summary.strip()}")
+    
+    prompt += ('\nSummary:' if language == 'cn' else '\nSummarization:')
     return prompt
 
-def summarize_overall_personality(content,language='en'):
-    prompt = 'Below are the personality traits and moods of users in multiple conversations, as well as the appropriate response strategies at the time：\n' if language=='cn' else "The following are the user's exhibited personality traits and emotions throughout multiple dialogues, along with appropriate response strategies for the current situation:"
-    for date,summary in content:
-        prompt += (f"\n in time{date}The analysis is{summary.strip()}" if language=='cn' else f"At {date}, the analysis shows {summary.strip()}")
-    prompt += ('\nPlease give a general summary of the users personality and the most appropriate response strategy for the AI ​​lover, and try to be concise and highly summarized. The summary is:' if language=='cn' else "Please provide a highly concise and general summary of the user's personality and the most appropriate response strategy for the AI lover, summarized as:")
+
+def summarize_overall_personality(content, language='en'):
+    prompt = 'Below are the personality traits and moods of users in multiple conversations, as well as the appropriate response strategies at the time:\n' if language == 'cn' else "The following are the user's exhibited personality traits and emotions throughout multiple dialogues, along with appropriate response strategies for the current situation:"
+    
+    for date, summary in content:
+        prompt += (f"\n in time {date} The analysis is {summary.strip()}" if language == 'cn' else f"At {date}, the analysis shows {summary.strip()}")
+    
+    prompt += ('\nPlease give a general summary of the users personality and the most appropriate response strategy for the AI lover, and try to be concise and highly summarized. The summary is:' if language == 'cn' else "Please provide a highly concise and general summary of the user's personality and the most appropriate response strategy for the AI lover, summarized as:")
     return prompt
 
-def summarize_person_prompt(content,user_name,boot_name,language):
-    #prompt = f'Please make inferences based on the following conversation{user_name}The character traits and mood of the person, and formulate a response strategy based on your speculation.\n' if language=='cn' else f"Based on the following dialogue, please summarize {user_name}'s personality traits and emotions, and devise response strategies based on your speculation. Dialogue content:\n"
+
+def summarize_person_prompt(content, user_name, boot_name, language):
     prompt = f"Based on the following dialogue, analyze {user_name}'s emotional state, cognitive patterns, and potential psychological needs. Suggest therapeutic strategies for the AI to respond empathetically and effectively. Dialogue content:\n"
+    
     for dialog in content:
         query = dialog['query']
         response = dialog['response']
-       
-        prompt += f"\n{user_name}：{query.strip()}"
-        prompt += f"\n{boot_name}：{response.strip()}"
+        prompt += f"\n{user_name}: {query.strip()}"
+        prompt += f"\n{boot_name}: {response.strip()}"
 
-    prompt += (f'\n{user_name}personality traits, mood,{boot_name}The response strategy is:' if language=='cn' else f"\n{user_name}'s personality traits, emotions, and {boot_name}'s response strategy are:")
+    prompt += (f'\n{user_name} personality traits, mood, {boot_name} The response strategy is:' if language == 'cn' else f"\n{user_name}'s personality traits, emotions, and {boot_name}'s response strategy are:")
     return prompt
 
 
+# --- Memory Extraction Functions ---
 
 def extract_session_summary(conversation_text, session_date, session_id):
     """
@@ -152,8 +169,6 @@ def extract_session_summary(conversation_text, session_date, session_id):
     Returns:
         dict: Extracted episodic memory entry.
     """
-    
-
     # Prompt to the LLM to extract insights
     insight_prompt = f"""
     Please analyze the following conversation and extract key information:
@@ -240,8 +255,6 @@ def extract_semantic_memory(latest_episodic_memory, existing_semantic_memory):
         return existing_semantic_memory
 
     # Merge new data into semantic memory
-    #updated_semantic_memory = existing_semantic_memory.copy()
-    # Make sure we're working with a dictionary
     updated_semantic_memory = existing_semantic_memory if isinstance(existing_semantic_memory, dict) else {}
 
     # Update or average personality traits
@@ -271,60 +284,68 @@ def extract_semantic_memory(latest_episodic_memory, existing_semantic_memory):
     return updated_semantic_memory
 
 
+# --- Main Logic ---
 
-memory_dir = os.path.expanduser("C:\\Users\\keyva\\MMPL_gpt\\memories\\update_memory_0512_eng.json")
-def summarize_memory(memory_dir,name=None,language='en'):
+def summarize_memory(memory_dir, name=None, language='en'):
     boot_name = 'AI'
     gen_prompt_num = 1
-    memory = json.loads(open(memory_dir,'r',encoding='utf8').read())
-    all_prompts,all_his_prompts, all_person_prompts = [],[],[]
-    for k,v in memory.items():
-        if name != None and k != name:
+    
+    with open(memory_dir, 'r', encoding='utf8') as f:
+        memory = json.loads(f.read())
+        
+    for k, v in memory.items():
+        if name is not None and k != name:
             continue
+            
         user_name = k
         print(f'Updating memory for user {user_name}')
-        if v.get('history') == None:
+        
+        if v.get('history') is None:
             continue
+            
         history = v['history']
-        if v.get('summary') == None:
+        
+        if v.get('summary') is None:
             memory[user_name]['summary'] = {}
-        if v.get('personality') == None:
+        if v.get('personality') is None:
             memory[user_name]['personality'] = {}
-        if v.get('issues') == None:
+        if v.get('issues') is None:
             memory[user_name]['issues'] = {}
+            
         for date, content in history.items():
-            # print(f'Updating memory for date {date}')
+            # Check flags to see if update is needed
             his_flag = False if (date in v['summary'].keys() and v['summary'][date]) else True
             person_flag = False if (date in v['personality'].keys() and v['personality'][date]) else True
-            problem_flag = False if (date in v['issues'].keys() and v['issues'][date]) else True #Add
-            hisprompt = summarize_content_prompt(content,user_name,boot_name,language)
-            issues_prompt = summarize_user_issues_prompt(content,user_name,boot_name,language)#Add
-            person_prompt = summarize_person_prompt(content,user_name,boot_name,language)
+            problem_flag = False if (date in v['issues'].keys() and v['issues'][date]) else True 
+
+            hisprompt = summarize_content_prompt(content, user_name, boot_name, language)
+            issues_prompt = summarize_user_issues_prompt(content, user_name, boot_name, language)
+            person_prompt = summarize_person_prompt(content, user_name, boot_name, language)
+
             if his_flag:
-                his_summary = llm_client.generate_text_simple(prompt=hisprompt,prompt_num=gen_prompt_num,language=language)
-                memory[user_name]['summary'][date] = {'content':his_summary}
-            if problem_flag:#ADD
-                issues_summary = llm_client.generate_text_simple(prompt=issues_prompt,prompt_num=gen_prompt_num,language=language)
-                memory[user_name]['issues'][date] = {'content':issues_summary}
+                his_summary = llm_client.generate_text_simple(prompt=hisprompt, prompt_num=gen_prompt_num, language=language)
+                memory[user_name]['summary'][date] = {'content': his_summary}
+            
+            if problem_flag:
+                issues_summary = llm_client.generate_text_simple(prompt=issues_prompt, prompt_num=gen_prompt_num, language=language)
+                memory[user_name]['issues'][date] = {'content': issues_summary}
                 print(issues_summary)
+            
             if person_flag:
-                person_summary = llm_client.generate_text_simple(prompt=person_prompt,prompt_num=gen_prompt_num,language=language)
+                person_summary = llm_client.generate_text_simple(prompt=person_prompt, prompt_num=gen_prompt_num, language=language)
                 memory[user_name]['personality'][date] = person_summary
         
-        overall_his_prompt = summarize_overall_prompt(list(memory[user_name]['summary'].items()),language=language)
-        overall_person_prompt = summarize_overall_personality(list(memory[user_name]['personality'].items()),language=language)
-        memory[user_name]['overall_history'] = llm_client.generate_text_simple(prompt=overall_his_prompt,prompt_num=gen_prompt_num,language=language)
-        memory[user_name]['overall_personality'] = llm_client.generate_text_simple(prompt=overall_person_prompt,prompt_num=gen_prompt_num,language=language)
+        overall_his_prompt = summarize_overall_prompt(list(memory[user_name]['summary'].items()), language=language)
+        overall_person_prompt = summarize_overall_personality(list(memory[user_name]['personality'].items()), language=language)
+        
+        memory[user_name]['overall_history'] = llm_client.generate_text_simple(prompt=overall_his_prompt, prompt_num=gen_prompt_num, language=language)
+        memory[user_name]['overall_personality'] = llm_client.generate_text_simple(prompt=overall_person_prompt, prompt_num=gen_prompt_num, language=language)
  
-    with open(memory_dir,'w',encoding='utf8') as f:
-        print(f'Sucessfully update memory for {name}')
-        json.dump(memory,f,ensure_ascii=False)
+    with open(memory_dir, 'w', encoding='utf8') as f:
+        print(f'Successfully updated memory for {name}')
+        json.dump(memory, f, ensure_ascii=False)
     return memory
 
+
 if __name__ == '__main__':
-    summarize_memory('../memories/eng_memory_cases.json',language='en')
-
-
-                
-
-
+    summarize_memory('../memories/eng_memory_cases.json', language='en')

@@ -5514,6 +5514,10 @@
                     {
                         "query": "Hi",
                         "response": ""
+                    },
+                    {
+                        "query": "Hi",
+                        "response": "Hey, Reza! 😊 How’s it going? How can I brighten your day today?"
                     }
                 ]
             }
@@ -5817,11 +5821,29 @@
                     {
                         "query": "Hello",
                         "response": "Hey there, Ali! 😊 How are you feeling today?"
+                    },
+                    {
+                        "query": "Hi",
+                        "response": "Hey, Ali! 😊 How are you feeling today? I'm here to chat with you, listen, or help out with anything on your mind. What's up? 🌟"
+                    },
+                    {
+                        "query": "Hi",
+                        "response": "Hi, Ali! 😊 How are you doing today? What's on your mind?"
                     }
                 ]
             }
         ],
-        "episodic_memory": [],
+        "episodic_memory": [
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-16",
+                "session_id": 0
+            }
+        ],
         "semantic_memory": {}
     },
     "k234": {
@@ -5865,9 +5887,80 @@
                         "response": "Hello, Keyvan65! 😊 I'm doing great, thank you for asking—especially now that you're here to chat with me! How about you? How's your day been so far? 💬"
                     }
                 ]
+            },
+            {
+                "session_id": 1,
+                "date": "2025-12-18",
+                "conversation": [
+                    {
+                        "query": "Hello",
+                        "response": "Hello, Keyvan65! 😊 How are you doing today? I'm here to listen, chat, or just hang out with you—whatever you need. What's on your mind?"
+                    }
+                ]
+            },
+            {
+                "session_id": 2,
+                "date": "2025-12-18",
+                "conversation": [
+                    {
+                        "query": "Hello",
+                        "response": "Hey there! 😊 How are you feeling today?"
+                    },
+                    {
+                        "query": "Hello",
+                        "response": "Hello, Keyvan65! 😊 How are you doing today? How can I brighten your day or support you?"
+                    }
+                ]
+            },
+            {
+                "session_id": 3,
+                "date": "2025-12-18",
+                "conversation": [
+                    {
+                        "query": "Hi",
+                        "response": "Hi there, Keyvan! 😊 How’s your day going so far?"
+                    }
+                ]
             }
         ],
-        "episodic_memory": [],
+        "episodic_memory": [
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-18",
+                "session_id": 0
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-18",
+                "session_id": 1
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-18",
+                "session_id": 2
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-18",
+                "session_id": 3
+            }
+        ],
         "semantic_memory": {}
     },
     "keyvan66": {
@@ -5886,6 +5979,39 @@
                     {
                         "query": "Hello",
                         "response": "Hi there, Keyvan! 😊 How are you feeling today? I'm here to listen and brighten your day. What's on your mind? 🌟"
+                    }
+                ]
+            }
+        ],
+        "episodic_memory": [
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-18",
+                "session_id": 0
+            }
+        ],
+        "semantic_memory": {}
+    },
+    "Ali3": {
+        "name": "Ali3",
+        "profile": {
+            "age": "",
+            "gender": "Male",
+            "occupation": "",
+            "residence": ""
+        },
+        "sessions": [
+            {
+                "session_id": 0,
+                "date": "2025-12-18",
+                "conversation": [
+                    {
+                        "query": "Hello",
+                        "response": "Hey there, Ali3! 😊 How are you feeling today? Anything on your mind or just here for a chat? I'm all ears (or circuits)! 🧡"
                     }
                 ]
             }
