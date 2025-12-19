@@ -46,12 +46,7 @@ This repository provides a reference implementation of a mobile-friendly, memory
 
 ## Architecture (High Level)
 
-<!-- Insert system architecture figure here -->
-<!-- Example:
-<p align="center">
-  <img src="assets/emma_workflow.png" alt="EMMA Architecture Overview" width="800">
-</p>
--->
+
 
 - **Indexing**: Episodic and semantic memory items are embedded and stored in vector indexes.
 - **Routing**: A classifier determines which memory layer(s) should be queried. Hybrid queries may combine episodic and semantic retrieval.
@@ -62,6 +57,7 @@ This repository provides a reference implementation of a mobile-friendly, memory
 ## Personalized Response Generation Workflow
 
 The figure illustrates the end-to-end workflow used by **EMMA** for generating personalized and psychologically informed responses. The pipeline consists of six sequential stages:
+![Personalized Response Generation Workflow](https://github.com/keyvan-Re/Emma/blob/8730850f8282c120b274472b84cd411a2058c2b4/assets/emma_workflow.jpg)
 
 ### Step 1 – User Query
 The interaction begins when the user submits a query, which may express a psychological concern, emotional state, or a general question.
