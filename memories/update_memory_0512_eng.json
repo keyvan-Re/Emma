@@ -5526,6 +5526,10 @@
                     {
                         "query": "Hi",
                         "response": "Hey, Reza! 😊 How’s it going? How can I brighten your day today?"
+                    },
+                    {
+                        "query": "Hello",
+                        "response": "Hi Reza! How are you doing today? It's always nice to hear from you! 😊"
                     }
                 ]
             }
@@ -5914,7 +5918,24 @@
             {
                 "session_id": 3,
                 "date": "2025-12-19",
-                "conversation": []
+                "conversation": [
+                    {
+                        "query": "hello",
+                        "response": "Hi, Ali! 😊 How are you feeling today?"
+                    },
+                    {
+                        "query": "Hello",
+                        "response": "Hi, Ali! 😊 How are you feeling today? What's on your mind?"
+                    },
+                    {
+                        "query": "Hello",
+                        "response": "Hey there, Ali! 😊 How’s it going?"
+                    },
+                    {
+                        "query": "Hello",
+                        "response": "Hi, Ali! 😊 How are you doing today?"
+                    }
+                ]
             }
         ],
         "episodic_memory": [
@@ -5989,6 +6010,15 @@
                 "insights": "No insights extracted.",
                 "session_date": "2025-12-19",
                 "session_id": 2
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-19",
+                "session_id": 3
             },
             {
                 "topics_discussed": [

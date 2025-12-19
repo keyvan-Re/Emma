@@ -398,46 +398,97 @@ def predict_new(
     # Return: (Chatbot View, State History, Textbox Reset)
     return new_history, new_history, "Generating..."
 
+# فرض بر این است که توابع و متغیرهای زیر در کد اصلی شما وجود دارند:
+# memory, data_args, enter_name_llamaindex, summarize_memory_event_personality,
+# extract_session_summary, save_local_memory, classify_query_local, predict_new
+# چون در قطعه کد ارسالی نبودند، آن‌ها را ایمپورت یا ماک نمی‌کنم تا کد شما به هم نریزد.
 
 def create_gradio_interface(service_context, api_keys):
     with gr.Blocks(title="EMMA") as demo:
         
         gr.HTML("""
         <style>
-            .mobile-button button {
-                width: 100% !important;
-                padding: 12px !important;
-                font-size: 16px !important;
-                border-radius: 10px !important;
-                background: linear-gradient(to right, #ff9966, #ff5e62) !important;
-                color: white !important;
-                font-weight: bold;
+            /* کانتینر اصلی وسط‌چین */
+            .main-container {
+                max-width: 800px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                padding: 20px;
+                background-color: #ffffff;
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             }
-            .gr-button-primary {
-                background-color: #6a11cb !important;
-                background-image: linear-gradient(to right, #6a11cb, #2575fc) !important;
-                color: #fff !important;
+
+            /* استایل دکمه‌های آبی روشن */
+            .custom-blue-btn {
+                background-color: #E0F7FA !important;
+                border: 1px solid #4DD0E1 !important;
+                color: #006064 !important;
+                font-size: 13px !important;
                 font-weight: bold !important;
+                border-radius: 8px !important;
+                padding: 5px 10px !important;
+                transition: 0.3s;
+                height: 40px !important;
+            }
+            .custom-blue-btn:hover {
+                background-color: #B2EBF2 !important;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+
+            /* === بخش جدید: حذف پس‌زمینه خاکستری === */
+            .no-bg {
+                background: transparent !important;
+                background-color: transparent !important;
                 border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important; /* حذف فاصله‌های اضافی */
+                gap: 10px; /* فاصله بین دکمه‌ها */
             }
-            .gr-button-secondary {
-                background-color: #f7971e !important;
-                background-image: linear-gradient(to right, #f7971e, #ffd200) !important;
-                color: #000 !important;
-                font-weight: bold !important;
-                border: none !important;
+            /* حذف پس‌زمینه پیش‌فرض Row در نسخه‌های جدید گرادیو */
+            .no-bg > .form {
+                 background: transparent !important;
+                 border: none !important;
             }
-            .gr-textbox textarea {
-                font-size: 16px;
+
+            .gr-textbox textarea { font-size: 16px; }
+            .gr-chatbot { font-size: 15px; }
+                
+                            /* مخفی کردن آیکون و متن لودینگ Gradio */
+            .gradio-container .main .wrap .status {
+                display: none !important;
             }
-            .gr-chatbot {
-                font-size: 15px;
+            .eta-bar {
+                display: none !important;
             }
+            /* مخفی کردن لودر دایره‌ای یا انیمیشن‌های دیگر */
+            .loading {
+                display: none !important;
+            }
+            /* مخفی کردن کانتینر وضعیت در نسخه‌های جدیدتر */
+            footer {
+                display: none !important;
+            }
+            /* یک روش کلی‌تر برای مخفی کردن نشانگر وضعیت روی دکمه‌ها یا خروجی‌ها */
+            .pending {
+                opacity: 1 !important; /* جلوگیری از کم‌رنگ شدن */
+            }
+            /* مخفی کردن نشانگر نارنجی */
+            .progress-text {
+                display: none !important;
+            }
+            .meta-text {
+                display: none !important; 
+            }
+            .loader {
+                display: none !important;
+            }
+
         </style>
         """)
 
         state = gr.State({
-            "history": [], # Will store list of dicts: [{"role": "user", "content": "x"}, ...]
+            "history": [], 
             "user_name": None,
             "memory": memory,
             "data_args": data_args,
@@ -449,48 +500,44 @@ def create_gradio_interface(service_context, api_keys):
             "initialized": False
         })
 
-        header = gr.Markdown(
-            "## 🧠 EMMA: Your Empathetic Mental Health Assistant\nWelcome! Please enter your name to begin."
-        )
+        with gr.Column(elem_classes=["main-container"]):
 
-        # Profile area
-        with gr.Accordion("🔐 Start New Session", open=True):
-            with gr.Column() as username_row:
-                username_input = gr.Textbox(label="Your Name", placeholder="e.g., Alex")
-                age_input = gr.Textbox(label="Age", placeholder="e.g., 28")
-                gender_input = gr.Dropdown(label="Gender", choices=["Male", "Female", "Other"])
-                occupation_input = gr.Textbox(label="Occupation", placeholder="e.g., Student, Engineer...")
-                residence_input = gr.Textbox(label="Place of Residence", placeholder="e.g., Berlin")
-                submit_name_btn = gr.Button("🎯 Start Session", variant="primary")
+            header = gr.Markdown("## 🧠 EMMA: Your Empathetic Mental Health Assistant\nWelcome! Please enter your name to begin.")
 
-        system_msg = gr.Textbox(label="🔔 System Messages", interactive=False, max_lines=2)
+            with gr.Accordion("🔐 Start New Session", open=True):
+                with gr.Column() as username_row:
+                    username_input = gr.Textbox(label="Your Name", placeholder="e.g., Alex")
+                    age_input = gr.Textbox(label="Age", placeholder="e.g., 28")
+                    gender_input = gr.Dropdown(label="Gender", choices=["Male", "Female", "Other"])
+                    occupation_input = gr.Textbox(label="Occupation", placeholder="e.g., Student, Engineer...")
+                    residence_input = gr.Textbox(label="Place of Residence", placeholder="e.g., Berlin")
+                    submit_name_btn = gr.Button("🎯 Start Session", size="sm", elem_classes=["custom-blue-btn"])
 
-        # CHAT UI
-        with gr.Column(visible=False) as chat_interface:
-            active_header = gr.Markdown()
+            system_msg = gr.Textbox(label="🔔 System Messages", interactive=False, max_lines=2)
 
-            with gr.Group():
-                # --- FIX: Set type='messages' explicitly ---
-                # پارامتر type را حذف کردیم
-                chatbot = gr.Chatbot(label="💬 EMMA Conversation")
+            with gr.Column(visible=False) as chat_interface:
+                active_header = gr.Markdown()
 
+                # اینجا Group را برداشتیم چون خودش بوردر و پس‌زمینه می‌اندازد
+                chatbot = gr.Chatbot(label="💬 EMMA Conversation", height=500)
 
-                with gr.Row():
-                    user_input = gr.Textbox(placeholder="Type your message here...", show_label=False)
-                    submit_btn = gr.Button("📤 Send", variant="primary", elem_classes=["mobile-button"])
+                # افزودن کلاس no-bg برای حذف پس‌زمینه خاکستری ردیف ورودی و ارسال
+                with gr.Row(elem_classes=["no-bg"]):
+                    user_input = gr.Textbox(placeholder="Type your message here...", show_label=False, scale=4, container=False) 
+                    # نکته: container=False کادر دور تکست‌باکس را تمیزتر می‌کند
+                    submit_btn = gr.Button("📤 Send", size="sm", elem_classes=["custom-blue-btn"], scale=1)
 
-                with gr.Row(equal_height=True):
-                    clear_btn = gr.Button("🧹 Clear", variant="secondary", elem_classes=["mobile-button"])
-                    new_session_btn = gr.Button("🔄 New Session", variant="secondary", elem_classes=["mobile-button"])
-                    switch_user_btn = gr.Button("👥 Switch User", variant="primary", elem_classes=["mobile-button"])
+                # افزودن کلاس no-bg برای حذف پس‌زمینه خاکستری ردیف دکمه‌های پایین
+                with gr.Row(equal_height=True, elem_classes=["no-bg"]):
+                    clear_btn = gr.Button("🧹 Clear", size="sm", elem_classes=["custom-blue-btn"])
+                    new_session_btn = gr.Button("🔄 New Session", size="sm", elem_classes=["custom-blue-btn"])
+                    switch_user_btn = gr.Button("👥 Switch User", size="sm", elem_classes=["custom-blue-btn"])
 
         # -------------------------------------------------------
-        #   Internal Functions
+        #   Internal Functions (بدون تغییر منطق، فقط کپی شده)
         # -------------------------------------------------------
 
         def initialize_session(name, age, gender, occupation, residence, state):
-
-            # Invalid name → return clean updates
             if not name.strip():
                 return (
                     gr.update(visible=True),                 
@@ -520,7 +567,7 @@ def create_gradio_interface(service_context, api_keys):
             new_state["memory"] = memory
             new_state["initialized"] = True
             new_state["semantic_memory_text"] = semantic_memory
-            new_state["history"] = [] # Ensure history is clear on init
+            new_state["history"] = [] 
 
             welcome_msg = hello_msg if hello_msg else f"Welcome {name}! How can I help you today?"
 
@@ -534,10 +581,7 @@ def create_gradio_interface(service_context, api_keys):
                 gr.update(value="")                        
             )
 
-        # -------------------------------------------------------
         def switch_user(state):
-
-            # save last session summary
             if state["initialized"] and state["user_name"] in state["memory"]:
                 if state["memory"][state["user_name"]]["sessions"]:
                     previous_session = state["memory"][state["user_name"]]["sessions"][-1]
@@ -548,7 +592,6 @@ def create_gradio_interface(service_context, api_keys):
                     )
                     state["memory"][state["user_name"]]["episodic_memory"].append(summary)
 
-            # reset
             new_state = {
                 "history": [],
                 "user_name": None,
@@ -573,21 +616,16 @@ def create_gradio_interface(service_context, api_keys):
                 gr.update(value=[])                        
             )
 
-        # -------------------------------------------------------
         def respond(message, state):
             if not state["initialized"]:
-                # Return empty list for chatbot, state, msg
                 return [], state, "Please enter your name first."
 
             if not message.strip():
                 return state["history"], state, "Empty input."
 
-            # Assuming enter_name_llamaindex is cheap or necessary to refresh memory pointers
             hello_msg, user_memory, sessions_memory, episodic_memory, semantic_memory = enter_name_llamaindex(
                 state["user_name"], memory, data_args)
 
-            # Only save memory after response usually, but here preserving original logic flow mostly
-            # Note: save_local_memory might need adaptation for Dict history
             memo, semantic_memory_text = save_local_memory(
                 memory, state["history"], state["user_name"], data_args
             )
@@ -603,7 +641,6 @@ def create_gradio_interface(service_context, api_keys):
             else:
                 user_memory_index = None
 
-            # Call predict_new which now returns List[Dict]
             chatbot_view, history, msg = predict_new(
                 text=message,
                 history=state["history"],
@@ -623,15 +660,13 @@ def create_gradio_interface(service_context, api_keys):
             new_state = state.copy()
             new_state["history"] = history
 
-            return chatbot_view, new_state, "" # Clear system msg or show status
+            return chatbot_view, new_state, "" 
 
-        # -------------------------------------------------------
         def clear_chat(state):
             new_state = state.copy()
             new_state["history"] = []
             return [], new_state, "Conversation cleared."
 
-        # -------------------------------------------------------
         def new_session(state):
             if state["user_name"] in state["memory"]:
                 if state["memory"][state["user_name"]]["sessions"]:
@@ -657,7 +692,7 @@ def create_gradio_interface(service_context, api_keys):
             return [], new_state, f"🆕 New session started (ID: {new_s['session_id']})."
 
         # -------------------------------------------------------
-        # Buttons
+        # Buttons Events
         # -------------------------------------------------------
 
         submit_name_btn.click(
