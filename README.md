@@ -93,7 +93,7 @@ Optionally, a post-processing module may refine tone and safety to ensure therap
 
 **Privacy Note:**  
 Since psychologically relevant information is abstracted into episodic and semantic memory, raw session transcripts can be periodically discarded. This reduces storage overhead while enhancing user privacy and data security.
-
+![Personalized Response Generation Workflow](assets/emma_workflow.png)
 ---
 
 ## Evaluation & Metrics
