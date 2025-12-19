@@ -8,9 +8,11 @@ class DataArguments:
     language: str = field(default='en')
     max_history: int = field(default=7,metadata={"help": "maximum number for keeping current history"},)
     enable_forget_mechanism: bool = field(default=False)
+
 @dataclass
 class ModelArguments:
-    model_type: str = field(
+    """
+   model_type: str = field(
         default="chatglm",
         metadata={"help": "model type: chatglm / belle"},
     )
@@ -18,18 +20,20 @@ class ModelArguments:
         default="THUDM/chatglm-6b",
         metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"},
     )
+    """
+    
     adapter_model: str = field(
-        default="MMPL_gpt\ChatGLM-LoRA-checkpoint",
-        metadata={"help": "Path to lora adapter model"},
+        default="MMPL_gpt",
+        metadata={"help": ""},
     )
     ptuning_checkpoint: str = field(
         default=None,
         metadata={"help": "Path to pretrained prefix embedding of ptuning"},
     )
     
+    
 
-    # prompt_column
-    # train_file: str = field(default="/home/t-qiga/azurewanjun/SiliconGirlfriend/data/merge_data/only_mental_0426.json")
+    
 
 data_args,model_args = HfArgumentParser(
     (DataArguments,ModelArguments)

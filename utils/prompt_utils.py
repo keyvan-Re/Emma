@@ -110,11 +110,11 @@ def generate_ai_keyword():
     return {'cn': '[|AI|]', 'en': '[|AI|]'}
 
 
-import openai # اگر نیاز به ایمپورت است
+import openai 
 
 def build_prompt_with_search_memory_llamaindex(
     history, 
-    query,  # نام را از text به query تغییر دادیم تا با app.py سازگار شود
+    query,  
     user_memory, 
     user_name, 
     user_memory_index, 
@@ -130,39 +130,36 @@ def build_prompt_with_search_memory_llamaindex(
     meta_prompt_semantic,
     meta_prompt_semantic_episodic
 ):
-    # استفاده از متغیر query به جای text
+  
     memory_search_query = f'The most relevant content to the question "{query}" is:'
     related_memos = ""
     
     print("memory_search_query:", memory_search_query)
-    # print("user_memory_index2:", user_memory_index) # برای تمیزی لاگ کامنت شد
+
 
     if user_memory_index:
-        retried_times = 2 # تعداد تلاش را کمتر کردیم تا سریعتر خطا دهد اگر مشکلی بود
+        retried_times = 2 
         count = 0
         
         while not related_memos and count < retried_times:
             try:
-                # --- تغییر مهم: آپدیت سینتکس LlamaIndex ---
-                # در نسخه جدید، ایندکس مستقیم query ندارد. باید موتور کوئری ساخته شود.
-                # service_context را اینجا حذف کردیم چون global settings استفاده می‌شود.
+             
                 query_engine = user_memory_index.as_query_engine(
-                    similarity_top_k=3,  # مثلا 3 حافظه مرتبط را برگرداند
+                    similarity_top_k=3,  
                 )
                 
                 query_result = query_engine.query(memory_search_query)
                 
-                # استخراج پاسخ از آبجکت جدید Response
+              
                 related_memos = str(query_result) if query_result else ''
                 
             except Exception as e:
                 print(f"Error querying index (attempt {count+1}/{retried_times}): {e}")
                 
-                # تلاش برای چرخش کلید (اگرچه با Settings گلوبال شاید تاثیر مستقیم نداشته باشد اما نگه میداریم)
+                
                 try:
                     api_index = (api_index + 1) % len(api_keys)
-                    # توجه: در نسخه های جدید openai.api_key به این شکل ممکن است کار نکند
-                    # اما فعلا دست نمی زنیم تا منطق برنامه بهم نریزد
+                    
                     openai.api_key = api_keys[api_index] 
                 except:
                     pass
@@ -213,5 +210,5 @@ def build_prompt_with_search_memory_llamaindex(
             boot_actual_name=boot_actual_name
         )
     
-    # print("prompt:", prompt) # لاگ طولانی را کم کردیم
+  
     return prompt, related_memos

@@ -4089,6 +4089,10 @@
                     {
                         "query": "Hi",
                         "response": "Hi Sara! 😊 How are you doing today? What's on your mind?"
+                    },
+                    {
+                        "query": "hello",
+                        "response": "Hi there, Sara! 😊 How are you feeling today? Anything on your mind you'd like to share or talk about? I'm here for you. 💛"
                     }
                 ]
             }
@@ -5882,6 +5886,34 @@
             {
                 "session_id": 1,
                 "date": "2025-12-19",
+                "conversation": [
+                    {
+                        "query": "hello",
+                        "response": "Hello, Ali! It's lovely to hear from you. How are you feeling today? 😊"
+                    },
+                    {
+                        "query": "hello",
+                        "response": "Hello, Ali! 😊 How are you doing today? What's on your mind? I'm here for you! 🌟"
+                    }
+                ]
+            },
+            {
+                "session_id": 2,
+                "date": "2025-12-19",
+                "conversation": [
+                    {
+                        "query": "hello",
+                        "response": "Hi there, Ali! 😊 How are you feeling today? I'm here for you—whether you just want to chat or need someone to listen."
+                    },
+                    {
+                        "query": "hello",
+                        "response": "Hi there, Ali! 😊 How are you feeling today?"
+                    }
+                ]
+            },
+            {
+                "session_id": 3,
+                "date": "2025-12-19",
                 "conversation": []
             }
         ],
@@ -5930,6 +5962,42 @@
                 "insights": "No insights extracted.",
                 "session_date": "2025-12-19",
                 "session_id": 1
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-19",
+                "session_id": 1
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-19",
+                "session_id": 2
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-19",
+                "session_id": 2
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-19",
+                "session_id": 3
             }
         ],
         "semantic_memory": {}
@@ -6115,6 +6183,29 @@
                 "session_id": 0
             }
         ],
+        "semantic_memory": {}
+    },
+    "k23": {
+        "name": "k23",
+        "profile": {
+            "age": "",
+            "gender": "Male",
+            "occupation": "",
+            "residence": ""
+        },
+        "sessions": [
+            {
+                "session_id": 0,
+                "date": "2025-12-19",
+                "conversation": [
+                    {
+                        "query": "hello",
+                        "response": "Hello, dear friend! 😊 How are you feeling today? What's on your mind?"
+                    }
+                ]
+            }
+        ],
+        "episodic_memory": [],
         "semantic_memory": {}
     }
 }
