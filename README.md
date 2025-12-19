@@ -49,7 +49,7 @@ This repository provides a reference implementation of a mobile-friendly, memory
 <!-- Insert system architecture figure here -->
 <!-- Example:
 <p align="center">
-  <img src="assets" alt="EMMA Architecture Overview" width="800">
+  <img src="assets/emma_workflow.jpg" alt="EMMA Architecture Overview" width="800">
 </p>
 -->
 
