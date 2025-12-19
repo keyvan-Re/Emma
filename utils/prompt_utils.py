@@ -1,6 +1,6 @@
 import openai
 boot_name_dict = {'en':'AI Companion'}
-boot_actual_name_dict = {'en':'SentiSenseBot'}
+boot_actual_name_dict = {'en':'Emma'}
 def output_prompt(history, user_name, boot_name):
     prompt = f""
     for dialog in history:
