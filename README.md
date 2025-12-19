@@ -27,6 +27,44 @@ Pic here
 •	Indexing: episodic and semantic items are embedded and stored in vector indexes.
 •	Routing: classifier determines which layer(s) to query. Hybrid queries can merge episodic + semantic retrieval.
 •	Prompting: retrieved memory is merged into therapy-aware prompt templates before sending to the LLM.
+Personalized Response Generation Workflow
+
+The figure illustrates the end-to-end workflow used by EMMA for generating personalized and psychologically informed responses. The pipeline consists of six sequential stages:
+
+Step 1 – User Query
+The interaction begins when the user submits a query, which may express a psychological concern, emotional state, or general question.
+
+Step 2 – Query Classification
+The user query, combined with a task-specific prompt, is passed to a language model (GPT-3.5) acting as a query recognition mechanism. This component classifies the query into one of four categories:
+
+Episodic (past experiences or events),
+
+Semantic (stable traits, preferences, or beliefs),
+
+Hybrid (requiring both episodic and semantic context), or
+
+Unrelated (no memory retrieval required).
+
+Step 3 – Memory Routing
+Based on the predicted memory type, the system determines which memory layer(s) should be accessed and forwards the query together with the memory label to the retrieval module.
+
+Step 4 – Memory Retrieval
+EMMA leverages LlamaIndex to retrieve relevant memory chunks from its structured memory store, which consists of:
+
+Session memory (short-term conversational context),
+
+Episodic memory (summarized past interactions), and
+
+Semantic memory (long-term psychological attributes and patterns).
+
+Step 5 – Prompt Composition
+The retrieved memory content is merged with the user query using task-specific prompt templates. These templates are designed to preserve emotional tone, ensure psychological coherence, and align responses with empathic counseling principles.
+
+Step 6 – Response Generation
+The composed prompt is forwarded to the language model (e.g., GPT-3.5), which generates a personalized, memory-informed, and emotionally aligned response.
+Optionally, a post-processing module may refine tone and safety to ensure therapeutic appropriateness.
+
+Importantly, since psychologically relevant information is abstracted into episodic and semantic memory, raw session transcripts can be periodically discarded. This design reduces storage overhead while strengthening user privacy and data security.
 
 
 Evaluation & metrics
