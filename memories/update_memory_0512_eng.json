@@ -4085,6 +4085,10 @@
                     {
                         "query": "What is the most important psychological illness?",
                         "response": "Hi Sara! That’s a really thoughtful question. Every psychological condition is important because it impacts someone’s mental health and well-being, and what’s most important can vary depending on the individual experiencing it. However, some of the most commonly discussed conditions that often need attention include:\n\n1. **Depression** - It’s incredibly common and can deeply affect a person’s mood, energy, and outlook on life.\n2. **Anxiety Disorders** - These are also prevalent and can cause overwhelming worry or fear that impacts daily life.\n3. **Bipolar Disorder** - This involves extreme mood swings, from manic highs to depressive lows.\n4. **Post-Traumatic Stress Disorder (PTSD)** - It affects individuals who’ve experienced trauma and can severely impact how they feel safe in the world.\n5. **Schizophrenia or Psychotic Disorders** - These affect how people perceive reality.\n\nWhat makes any mental illness “important” is how it affects someone personally, their quality of life, and their ability to function or feel joy.\n\nAre you thinking about this question for yourself or someone close to you? I’m here for you if you’d like to share more thoughts about this—it sounds like something meaningful might be behind your curiosity! ❤️"
+                    },
+                    {
+                        "query": "Hi",
+                        "response": "Hi Sara! 😊 How are you doing today? What's on your mind?"
                     }
                 ]
             }
@@ -5759,10 +5763,10 @@
     "Tara": {
         "name": "Tara",
         "profile": {
-            "age": "20",
-            "gender": "Female",
-            "occupation": "Student",
-            "residence": "Iran"
+            "age": "",
+            "gender": "Male",
+            "occupation": "",
+            "residence": ""
         },
         "sessions": [
             {
@@ -5776,11 +5780,38 @@
                     {
                         "query": "hello",
                         "response": "Hey there, Tara! 😊 How are you feeling today?"
+                    },
+                    {
+                        "query": "Hello",
+                        "response": "Hey there, Tara! 😊 How are you feeling today?"
+                    }
+                ]
+            },
+            {
+                "session_id": 1,
+                "date": "2025-12-18",
+                "conversation": [
+                    {
+                        "query": "Hello",
+                        "response": "Hey Tara! 😊 How are you doing today? What's on your mind?"
+                    },
+                    {
+                        "query": "Hello",
+                        "response": "Hi there, Tara! 😊 How are you feeling today? I'm here to keep you company or chat about anything that's on your mind. 💛"
                     }
                 ]
             }
         ],
         "episodic_memory": [
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-11-28",
+                "session_id": 0
+            },
             {
                 "topics_discussed": [
                     "N/A"
@@ -5829,8 +5860,29 @@
                     {
                         "query": "Hi",
                         "response": "Hi, Ali! 😊 How are you doing today? What's on your mind?"
+                    },
+                    {
+                        "query": "Hi",
+                        "response": "Hey there, Ali! 😊 How's your day going so far?"
+                    },
+                    {
+                        "query": "Hi",
+                        "response": "Hey there, Ali! 😊 How are you feeling today?"
+                    },
+                    {
+                        "query": "Hello",
+                        "response": "Hey there, Ali! 😊 How are you feeling today? I'm here to listen, chat, and just be the friend you need. What's on your mind?"
+                    },
+                    {
+                        "query": "Hello",
+                        "response": "Hello, Ali! 😊 How are you feeling today? It's so nice to hear from you!"
                     }
                 ]
+            },
+            {
+                "session_id": 1,
+                "date": "2025-12-19",
+                "conversation": []
             }
         ],
         "episodic_memory": [
@@ -5842,6 +5894,42 @@
                 "insights": "No insights extracted.",
                 "session_date": "2025-12-16",
                 "session_id": 0
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-16",
+                "session_id": 0
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-16",
+                "session_id": 0
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-16",
+                "session_id": 0
+            },
+            {
+                "topics_discussed": [
+                    "N/A"
+                ],
+                "emotional_state": "unknown",
+                "insights": "No insights extracted.",
+                "session_date": "2025-12-19",
+                "session_id": 1
             }
         ],
         "semantic_memory": {}

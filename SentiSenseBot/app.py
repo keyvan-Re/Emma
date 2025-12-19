@@ -52,9 +52,7 @@ import torch
 import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-# --- تنظیمات مدل دسته‌بندی محلی ---
-# مسیر پوشه‌ای که مدل را در آن ذخیره کردید
-# استفاده از روش r (Raw String) برای حل مشکل مسیر ویندوز
+
 LOCAL_MODEL_PATH = r"C:\Users\keyva\MMPL_gpt\Classification Model\final_xlm_r_model_router"
 
 print(f"Loading model from: {LOCAL_MODEL_PATH}")
@@ -220,21 +218,18 @@ def chatgpt_chat(prompt, system, history, gpt_config, api_index=0):
 
 
 def classify_query_local(text):
-    """
-    این تابع از مدل XLM-RoBERTa آموزش‌دیده شده برای تشخیص نوع حافظه استفاده می‌کند.
-    جایگزین تابع classify_query_openai شده است و نیازی به اینترنت یا API Key ندارد.
-    """
-    # لیست کلاس‌ها طبق آموزش مدل شما (دقت کنید ترتیب اعداد مهم است)
+  
+    
     # 0: episodic, 1: semantic, 2: semantic_episodic, 3: unrelated
     id2label_map = {
         0: "episodic_memory",
         1: "semantic_memory",
-        2: "semantic-episodic",  # خط تیره گذاشتیم تا با فرمت قدیمی سازگار باشد
-        3: "unknown"             # کلاس unrelated را به unknown تبدیل کردیم
+        2: "semantic-episodic",  
+        3: "unknown"             
     }
 
     try:
-        # 1. آماده‌سازی متن برای مدل
+       
         inputs = _tokenizer(
             text, 
             return_tensors="pt", 
@@ -243,26 +238,17 @@ def classify_query_local(text):
             max_length=512
         )
         
-        # انتقال ورودی به GPU اگر مدل روی GPU باشد (اختیاری)
-        # if torch.cuda.is_available():
-        #     inputs = {k: v.to("cuda") for k, v in inputs.items()}
-
-        # 2. پیش‌بینی توسط مدل
+        
+       
         with torch.no_grad():
             outputs = _classifier_model(**inputs)
         
-        # 3. محاسبه احتمالات و انتخاب بهترین کلاس
+        
         logits = outputs.logits
         probabilities = F.softmax(logits, dim=-1)
         predicted_class_id = torch.argmax(probabilities, dim=-1).item()
         
-        # بررسی اطمینان مدل (اختیاری)
-        # اگر بالاترین احتمال کمتر از 60% بود، می‌توانیم بگوییم unknown
-        # top_prob = probabilities[0][predicted_class_id].item()
-        # if top_prob < 0.6:
-        #     return "unknown"
-
-        # 4. تبدیل عدد کلاس به متن
+        
         category = id2label_map.get(predicted_class_id, "unknown")
         
         print(f"Local Classifier: '{text}' -> {category} (Class ID: {predicted_class_id})")
