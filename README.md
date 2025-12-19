@@ -16,8 +16,7 @@ This repository provides a reference implementation of a mobile-friendly, memory
 - [Personalized Response Generation Workflow](#Personalized-Response-Generation-Workflow)
 - [Evaluation & Metrics](#evaluation--metrics)
 - [Limitations & Safety](#limitations--safety)
-- [License](#license)
-- [Citation](#citation)
+
 
 ---
 
