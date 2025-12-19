@@ -2,6 +2,7 @@
 EMMA — Empathetic Memory-Augmented Multi-layer Assistant (Research Prototype)
 Empathetic, privacy-aware memory for psychologically informed conversational agents.
 Reference implementation of a mobile-friendly memory-augmented assistant inspired by the EMMA architecture (session / episodic / semantic memory, query classification, LlamaIndex retrieval, Gradio demo). This repository contains the code, data processing scripts, retrieval/indexing, the classifier, and evaluation tooling used for the research prototype.
+
 ⚠️ Research prototype — not a clinical tool. Use for research, experiments, and controlled simulations only. See Limitations & Safety below.
 
 Table of contents
