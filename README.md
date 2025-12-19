@@ -40,7 +40,7 @@ This repository provides a reference implementation of a mobile-friendly, memory
 - **Evaluation tooling**:  
   Scripts supporting quantitative memory retrieval accuracy and qualitative Likert-scale evaluation pipelines.
 
-*(Design and evaluation follow the EMMA paper; see [Citation](#citation).)*
+
 
 ---
 
