@@ -13,6 +13,7 @@ This repository provides a reference implementation of a mobile-friendly, memory
 ## Table of Contents
 - [Key Features](#key-features)
 - [Architecture (High Level)](#architecture-high-level)
+- [Personalized Response Generation Workflow](#Personalized-Response-Generation-Workflow)
 - [Evaluation & Metrics](#evaluation--metrics)
 - [Limitations & Safety](#limitations--safety)
 - [License](#license)
@@ -125,13 +126,6 @@ Evaluation can be reproduced by preparing:
 
 ---
 
-## License
 
-**Suggested License:** MIT License  
-(Replace with your preferred license if required.)
 
----
 
-## Citation
-
-If you use this work, please cite the EMMA paper associated with this repository.
