@@ -45,6 +45,53 @@ nltk.data.path = [os.path.join(os.path.dirname(__file__), "nltk_data")] + nltk.d
 
 tokenizer = tiktoken.get_encoding("cl100k_base")
 
+GAPGPT_BASE_URL = os.getenv("GAPGPT_BASE_URL", "https://# -*- coding:utf-8 -*-
+
+import os
+import sys
+import json
+import time
+import copy
+import shutil
+import signal
+import logging
+import platform
+
+import gradio as gr
+import nltk
+import torch
+import tiktoken
+
+from openai import OpenAI as OpenAIClient
+from llama_index.embeddings.openai import OpenAIEmbedding
+
+# from langchain_openai import ChatOpenAI, OpenAI as LangChainOpenAI # (If not used, can be commented out)
+from llama_index.llms.openai import OpenAI as LlamaIndexOpenAI
+from llama_index.core import Settings
+from llama_index.core.indices.prompt_helper import PromptHelper
+
+prompt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../')
+sys.path.append(prompt_path)
+
+# Assuming these imports exist in your local environment
+from utils.sys_args import data_args, model_args
+from utils.app_modules.utils import *
+from utils.app_modules.presets import *
+from utils.app_modules.overwrites import *
+from utils.prompt_utils import *
+from utils.memory_utils import (
+    enter_name_llamaindex,
+    summarize_memory_event_personality,
+    save_local_memory,
+    extract_session_summary,
+    extract_semantic_memory,
+)
+
+# Ensure NLTK data path
+nltk.data.path = [os.path.join(os.path.dirname(__file__), "nltk_data")] + nltk.data.path
+
+tokenizer = tiktoken.get_encoding("cl100k_base")
+
 GAPGPT_BASE_URL = os.getenv("GAPGPT_BASE_URL", "https://api.gapgpt.app/v1")
 openai_client_cache = {}
 
@@ -58,50 +105,7 @@ LOCAL_MODEL_PATH = r"C:\Users\keyva\MMPL_gpt\Classification Model\final_xlm_r_mo
 print(f"Loading model from: {LOCAL_MODEL_PATH}")
 
 try:
-    _tokenizer = AutoTokenizer.from_pretrained(LOCAL_MODEL_PATH)
-    _classifier_model = AutoModelForSequenceClassification.from_pretrained(LOCAL_MODEL_PATH)
-    _classifier_model.eval()
-    print("Local classifier loaded successfully.")
-except Exception as e:
-    print(f"Error loading local classifier: {e}")
-
-
-def get_gapgpt_client(api_key: str) -> OpenAIClient:
-    if not api_key:
-        raise ValueError("API key is missing while attempting to create a GapGPT client.")
-    if api_key not in openai_client_cache:
-        openai_client_cache[api_key] = OpenAIClient(api_key=api_key, base_url=GAPGPT_BASE_URL)
-    return openai_client_cache[api_key]
-
-
-os_name = platform.system()
-clear_command = 'cls' if os_name == 'Windows' else 'clear'
-stop_stream = False
-
-
-def signal_handler(signal_number, frame):
-    global stop_stream
-    stop_stream = True
-
-
-VECTOR_SEARCH_TOP_K = 2
-
-# Update this path to your actual file location
-api_path = 'C:\\Users\\keyva\\MMPL_gpt\\api_key_list.txt'
-
-
-def read_apis(path):
-    api_keys_local = []
-    if os.path.exists(path):
-        with open(path, 'r', encoding='utf8') as f:
-            for line in f:
-                line = line.strip()
-                if line:
-                    api_keys_local.append(line)
-    return api_keys_local
-
-
-memory_dir = os.path.expanduser("C:\\Users\\keyva\\MMPL_gpt\\memories\\update_memory_0512_eng.json")
+    _tokenizer = AutoTokenizerC:\\Users\\keyva\\MMPL_gpt\\memories\\update_memory_0512_eng.json")
 
 # Ensure directory exists
 os.makedirs(os.path.dirname(memory_dir), exist_ok=True)
@@ -398,17 +402,12 @@ def predict_new(
     # Return: (Chatbot View, State History, Textbox Reset)
     return new_history, new_history, "Generating..."
 
-# فرض بر این است که توابع و متغیرهای زیر در کد اصلی شما وجود دارند:
-# memory, data_args, enter_name_llamaindex, summarize_memory_event_personality,
-# extract_session_summary, save_local_memory, classify_query_local, predict_new
-# چون در قطعه کد ارسالی نبودند، آن‌ها را ایمپورت یا ماک نمی‌کنم تا کد شما به هم نریزد.
 
 def create_gradio_interface(service_context, api_keys):
     with gr.Blocks(title="EMMA") as demo:
         
         gr.HTML("""
         <style>
-            /* کانتینر اصلی وسط‌چین */
             .main-container {
                 max-width: 800px !important;
                 margin-left: auto !important;
@@ -419,7 +418,6 @@ def create_gradio_interface(service_context, api_keys):
                 box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             }
 
-            /* استایل دکمه‌های آبی روشن */
             .custom-blue-btn {
                 background-color: #E0F7FA !important;
                 border: 1px solid #4DD0E1 !important;
@@ -436,16 +434,16 @@ def create_gradio_interface(service_context, api_keys):
                 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }
 
-            /* === بخش جدید: حذف پس‌زمینه خاکستری === */
             .no-bg {
                 background: transparent !important;
                 background-color: transparent !important;
-                border: none !important;
-                box-shadow: none !important;
-                padding: 0 !important; /* حذف فاصله‌های اضافی */
-                gap: 10px; /* فاصله بین دکمه‌ها */
+                ; 
+                gap: 10px; 
             }
-            /* حذف پس‌زمینه پیش‌فرض Row در نسخه‌های جدید گرادیو */
+            .no-bg > .form {
+                 ; 
+                gap: 10px; 
+            }
             .no-bg > .form {
                  background: transparent !important;
                  border: none !important;
@@ -454,26 +452,24 @@ def create_gradio_interface(service_context, api_keys):
             .gr-textbox textarea { font-size: 16px; }
             .gr-chatbot { font-size: 15px; }
                 
-                            /* مخفی کردن آیکون و متن لودینگ Gradio */
             .gradio-container .main .wrap .status {
                 display: none !important;
             }
             .eta-bar {
                 display: none !important;
             }
-            /* مخفی کردن لودر دایره‌ای یا انیمیشن‌های دیگر */
             .loading {
                 display: none !important;
             }
-            /* مخفی کردن کانتینر وضعیت در نسخه‌های جدیدتر */
+            /* Hide status container in newer versions */
             footer {
                 display: none !important;
             }
-            /* یک روش کلی‌تر برای مخفی کردن نشانگر وضعیت روی دکمه‌ها یا خروجی‌ها */
+            /* Generic way to hide status indicator on buttons or outputs */
             .pending {
-                opacity: 1 !important; /* جلوگیری از کم‌رنگ شدن */
+                opacity: 1 !important; /* Prevent fading */
             }
-            /* مخفی کردن نشانگر نارنجی */
+            /* Hide orange indicator */
             .progress-text {
                 display: none !important;
             }
@@ -518,23 +514,23 @@ def create_gradio_interface(service_context, api_keys):
             with gr.Column(visible=False) as chat_interface:
                 active_header = gr.Markdown()
 
-                # اینجا Group را برداشتیم چون خودش بوردر و پس‌زمینه می‌اندازد
+                # Removed Group as it adds borders and background
                 chatbot = gr.Chatbot(label="💬 EMMA Conversation", height=500)
 
-                # افزودن کلاس no-bg برای حذف پس‌زمینه خاکستری ردیف ورودی و ارسال
+                # Added no-bg class to remove gray background for input and submit row
                 with gr.Row(elem_classes=["no-bg"]):
                     user_input = gr.Textbox(placeholder="Type your message here...", show_label=False, scale=4, container=False) 
-                    # نکته: container=False کادر دور تکست‌باکس را تمیزتر می‌کند
+                    # Note: container=False makes the box cleaner
                     submit_btn = gr.Button("📤 Send", size="sm", elem_classes=["custom-blue-btn"], scale=1)
 
-                # افزودن کلاس no-bg برای حذف پس‌زمینه خاکستری ردیف دکمه‌های پایین
+                # Added no-bg class to remove gray background for bottom button row
                 with gr.Row(equal_height=True, elem_classes=["no-bg"]):
                     clear_btn = gr.Button("🧹 Clear", size="sm", elem_classes=["custom-blue-btn"])
                     new_session_btn = gr.Button("🔄 New Session", size="sm", elem_classes=["custom-blue-btn"])
                     switch_user_btn = gr.Button("👥 Switch User", size="sm", elem_classes=["custom-blue-btn"])
 
         # -------------------------------------------------------
-        #   Internal Functions (بدون تغییر منطق، فقط کپی شده)
+        #   Internal Functions (Logic preserved, just translated)
         # -------------------------------------------------------
 
         def initialize_session(name, age, gender, occupation, residence, state):
@@ -734,10 +730,10 @@ def main():
     if not gapgpt_api_key:
         print("Warning: GAPGPT_API_KEY environment variable is not set. Proceeding with keys from file.")
     else:
-        # تغییر مهم ۱: ست کردن متغیر محیطی برای جلوگیری از خطاهای ناگهانی کتابخانه‌های وابسته
+        # Important change 1: Set environment variable to prevent errors in dependent libraries
         os.environ["OPENAI_API_KEY"] = gapgpt_api_key
 
-    # تنظیم LLM (مدل زبانی)
+    # Initialize LLM
     llm = LlamaIndexOpenAI(
         model="gpt-4o",
         temperature=1,
@@ -749,17 +745,16 @@ def main():
         api_base=GAPGPT_BASE_URL,
     )
 
-    # تغییر مهم ۲: تنظیم مدل Embedding با همان کلید و آدرس GapGPT
-    # اگر سرویس دهنده شما از امبدینگ پشتیبانی نمی‌کند، این بخش نیاز به تغییر به مدل لوکال دارد
+    # Important change 2: Set Embedding model using the same GapGPT key/base
     embed_model = OpenAIEmbedding(
         api_key=gapgpt_api_key,
         api_base=GAPGPT_BASE_URL,
-        model="text-embedding-3-small" # یا هر مدلی که سرویس شما پشتیبانی می‌کند
+        model="text-embedding-3-small" # Or whichever model your service supports
     )
 
-    # اعمال تنظیمات سراسری
+    # Apply global settings
     Settings.llm = llm
-    Settings.embed_model = embed_model  # <--- این خط جلوی خطای فعلی را می‌گیرد
+    Settings.embed_model = embed_model  # <--- This line fixes the current error
 
     Settings.prompt_helper = PromptHelper(
         context_window=4096,
@@ -768,11 +763,9 @@ def main():
         tokenizer=tokenizer,
     )
 
-    # توجه: مطمئن شوید متغیر api_keys در اینجا تعریف شده باشد یا از args خوانده شود
-    # اگر api_keys در کد شما تعریف نشده، احتمالاً باید آن را بارگذاری کنید یا اگر استفاده نمی‌شود حذف کنید.
-    # فرض بر این است که api_keys قبلاً در کد شما تعریف شده است:
+    # Note: Ensure api_keys is defined here or loaded from args
     if 'api_keys' not in locals():
-        api_keys = {} # یا هر مقداری که کد شما انتظار دارد
+        api_keys = {}
 
     demo = create_gradio_interface(Settings, api_keys)
     demo.launch(
